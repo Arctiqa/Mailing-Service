@@ -1,18 +1,27 @@
 {% extends 'mailing/base.html' %}
 {% block content %}
 
-{% for object in object_list %}
+
 <div class="container">
-    <div class="col-6">
-        ФИО: {{ object.name }}
-        <br>
-        Email: {{ object.email }}
-    </div>
-    <a href="#" class="btn-primary">редактировать</a>
-    /
-    <a href="#" class="btn-primary">удалить</a>
-    <hr>
+    <h2>Список получателей</h2>
 </div>
-{% endfor %}
+<div class="container">
+    <div class="bg-body-tertiary p-3 rounded">
+        {% for object in object_list %}
+        <div class="container">
+            <div class="col-6">
+                ФИО: {{ object.name }}
+                <br>
+                Email: {{ object.email }}
+            </div>
+            <a href="{% url 'mailing:client_edit' object.pk %}" class="btn-primary">редактировать</a>
+            /
+            <a href="{% url 'mailing:client_delete' object.pk %}" class="btn-primary">удалить</a>
+            <hr>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 
 {% endblock %}
