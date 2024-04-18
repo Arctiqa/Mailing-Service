@@ -3,8 +3,10 @@
 
 <div class="container">
     <h2>Список сообщений</h2>
+    <br>
+    <a class="btn btn-success" href="{% url 'mailing:message_create' %}">Создать тему</a>
 </div>
-
+<br>
 <div class="container">
     <div class="bg-body-tertiary p-3 rounded">
         {% for object in object_list %}

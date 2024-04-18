@@ -4,7 +4,10 @@
 
 <div class="container">
     <h2>Список получателей</h2>
+    <br>
+    <a class="btn btn-success" href="{% url 'mailing:client_create' %}">добавить получателя</a>
 </div>
+<br>
 <div class="container">
     <div class="bg-body-tertiary p-3 rounded">
         {% for object in object_list %}
@@ -13,6 +16,8 @@
                 ФИО: {{ object.name }}
                 <br>
                 Email: {{ object.email }}
+                <br>
+                Комментарий: {{ object.commentary }}
             </div>
             <a href="{% url 'mailing:client_edit' object.pk %}" class="btn-primary">редактировать</a>
             /
