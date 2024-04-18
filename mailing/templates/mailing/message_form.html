@@ -1,0 +1,27 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
+<div class="container">
+    <main>
+        <h1>Сообщение и тема</h1>
+        <div class="col-6">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <hr class="my-4">
+
+                <button class="w-100 btn btn-success btn-lg" type="submit">
+                    {% if object %}
+                    Редактировать
+                    {% else %}
+                    Сохранить
+                    {% endif %}
+                </button>
+            </form>
+        </div>
+
+    </main>
+</div>
+
+{% endblock %}

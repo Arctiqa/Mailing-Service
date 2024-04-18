@@ -1,0 +1,23 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
+<main class="container">
+    <div class="bg-body-tertiary p-3 rounded">
+        <h1>Сервис почтовой рассылки</h1>
+        <p class="lead">Создавайте рассылки и отправляйте их клиентам</p>
+        <a class="btn btn-lg btn-success" href="{% url 'mailing:message_create' %}">Создать рассылку</a>
+        <a class="btn btn-lg btn-success" href="{% url 'mailing:client_create' %}">Добавить получателя</a>
+    </div>
+    <hr>
+    <div class="bg-body-tertiary p-3 rounded">
+        <a href="#" class="btn-success">Текущие рассылки</a>
+        <br>
+        <a href="{% url 'mailing:messages_list' %}" class="btn-success">История рассылок</a>
+        <br>
+        <a href="{% url 'mailing:clients_list' %}" class="btn-success">Список получателей</a>
+    </div>
+
+</main>
+
+
+{% endblock %}

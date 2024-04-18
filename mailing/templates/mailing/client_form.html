@@ -1,0 +1,23 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
+<form method="post">
+
+    <div class="container">
+        <h3>Заполните информацию о получателе</h3>
+        <div class="row">
+            <div class="col-6">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">
+                    {% if object %}
+                    Редактировать
+                    {% else %}
+                    Сохранить
+                    {% endif %}
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
