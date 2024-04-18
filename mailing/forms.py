@@ -13,7 +13,7 @@ class MixinFormControl:
 class ClientForm(MixinFormControl, forms.ModelForm):
     class Meta:
         model = Client
-        fields = '__all__'
+        fields = ['name', 'email', 'commentary']
 
 
 class MessageForm(MixinFormControl, forms.ModelForm):

@@ -1,12 +1,16 @@
+from django.conf import settings
 from django.db import models
+
 
 NULLABLE = {'blank': True, 'null': True}
 
 
 class Client(models.Model):
     email = models.EmailField(unique=True, verbose_name='email')
-    name = models.TextField(max_length=150, verbose_name='ФИО')
-    commentary = models.TextField(verbose_name='комментарий', **NULLABLE)
+    name = models.CharField(max_length=150, verbose_name='ФИО')
+    commentary = models.CharField(max_length=250, verbose_name='комментарий', **NULLABLE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, verbose_name='пользователь',
+                              **NULLABLE)
 
     def __str__(self):
         return f'ФИО: {self.name}, email: {self.email}'
@@ -14,6 +18,20 @@ class Client(models.Model):
     class Meta:
         verbose_name = 'клиент'
         verbose_name_plural = 'клиенты'
+
+
+class Message(models.Model):
+    title = models.CharField(max_length=200, verbose_name='Тема')
+    text = models.TextField(verbose_name='Сообщение')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, verbose_name='пользователь',
+                              **NULLABLE)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
 
 
 class MailConfig(models.Model):
@@ -28,18 +46,6 @@ class MailConfig(models.Model):
 
     def __str__(self):
         return f'{self.start_time} - {self.end_time}, периодичность: {self.periodicity}, статус: {self.status}'
-
-
-class Message(models.Model):
-    title = models.CharField(max_length=200, verbose_name='Тема')
-    text = models.TextField(verbose_name='Сообщение')
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = 'Сообщение'
-        verbose_name_plural = 'Сообщения'
 
 
 class MailingAttempt(models.Model):
