@@ -1,18 +1,18 @@
 from django import forms
 
-from mailing.forms import MixinFormControl
+from mailing.forms import MixinFormStyle
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordResetForm, SetPasswordForm
 
 from users.models import User
 
 
-class UserRegisterForm(MixinFormControl, UserCreationForm):
+class UserRegisterForm(MixinFormStyle, UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'password1', 'password2')
 
 
-class UserProfileForm(MixinFormControl, UserChangeForm):
+class UserProfileForm(MixinFormStyle, UserChangeForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'phone', 'telegram')
@@ -22,7 +22,7 @@ class UserProfileForm(MixinFormControl, UserChangeForm):
         self.fields['password'].widget = forms.HiddenInput()
 
 
-class ResetPasswordForm(MixinFormControl, PasswordResetForm):
+class ResetPasswordForm(MixinFormStyle, PasswordResetForm):
     class Meta:
         model = User
         fields = ('email',)

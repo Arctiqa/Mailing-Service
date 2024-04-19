@@ -1,24 +1,34 @@
 from django import forms
 
-from mailing.models import Client, Message
+from mailing.models import Client, Message, Mailing
 
 
-class MixinFormControl:
+class MixinFormStyle:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+            if field_name != 'is_active':
+                field.widget.attrs['class'] = 'form-control'
 
 
-class ClientForm(MixinFormControl, forms.ModelForm):
-
+class ClientForm(MixinFormStyle, forms.ModelForm):
     class Meta:
         model = Client
         fields = ['name', 'email', 'commentary']
 
 
-class MessageForm(MixinFormControl, forms.ModelForm):
+class MessageForm(MixinFormStyle, forms.ModelForm):
     class Meta:
         model = Message
         exclude = ('owner',)
 
+
+class MailingForm(MixinFormStyle, forms.ModelForm):
+    class Meta:
+        model = Mailing
+        exclude = ('owner', 'status',)
+
+        # widgets = {
+        #     'start_date': AdminSplitDateTime(attrs={'placeholder': 'DD.MM.YYYY', 'type': 'date'}),
+        #     'end_date': AdminSplitDateTime(attrs={'placeholder': 'DD.MM.YYYY', 'type': 'date'}),
+        # }

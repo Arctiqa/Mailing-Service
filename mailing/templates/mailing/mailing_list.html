@@ -1,0 +1,51 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
+<div class="container">
+    <h2>Список рассылок</h2>
+    <br>
+    <a class="btn btn-success" href="{% url 'mailing:mailing_create' %}">добавить рассылку</a>
+</div>
+<br>
+
+
+<div class="container">
+    <div class="bg-body-tertiary p-3 rounded">
+        {% for object in object_list %}
+
+        <div class="bg-body-tertiary p-3 rounded">
+            <div class="container">
+                <div class="col-6">
+
+
+                    <h4 class="my-0 font-weight-normal">Рассылка: {{ object.name }}</h4>
+                    <br>
+                </div>
+                <div class="card-body">
+                    <p>Дата первого отправления: {{ object.start_time }}</p>
+                    <p>Дата окончания: {{ object.end_time }}</p>
+                    <p>Периодичность: {{ object.periodicity }}</p>
+                    <a href="{% url 'mailing:mailing_edit' object.pk %}" class="btn-primary">редактировать</a>
+                    /
+                    <a href="{% url 'mailing:mailing_delete' object.pk %}" class="btn-primary">удалить</a>
+                    /
+                    <a href="{% url 'mailing:mailing_view' object.pk %}" class="btn-primary">подробности>></a>
+                    <hr>
+                    <div class="card-footer">
+                        {% if object.is_active %}
+                        <p style="color: green;">Активна</p>
+                        {% else %}
+                        <p style="color: red;">Неактивна</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
