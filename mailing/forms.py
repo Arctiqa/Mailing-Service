@@ -11,6 +11,7 @@ class MixinFormControl:
 
 
 class ClientForm(MixinFormControl, forms.ModelForm):
+
     class Meta:
         model = Client
         fields = ['name', 'email', 'commentary']
@@ -19,4 +20,5 @@ class ClientForm(MixinFormControl, forms.ModelForm):
 class MessageForm(MixinFormControl, forms.ModelForm):
     class Meta:
         model = Message
-        fields = '__all__'
+        exclude = ('owner',)
+

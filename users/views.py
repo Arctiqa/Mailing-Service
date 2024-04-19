@@ -28,7 +28,7 @@ class RegisterView(CreateView):
         user.token = token
         user.is_active = False
         user.save()
-        host = self.request.get_host()  # 127.0.0.1:8000
+        host = self.request.get_host()
         url = f'http://{host}/users/verify/{token}'
         message = f'Для подтверждения верификации почты необходимо перейти по ссылке: {url}'
         send_mail('Верификация почты', message, settings.EMAIL_HOST_USER, [user.email])

@@ -14,11 +14,23 @@ class ClientCreateView(CreateView):
     model = Client
     form_class = ClientForm
 
-    success_url = reverse_lazy('mailing:index')
+    success_url = reverse_lazy('mailing:clients_list')
+
+    def form_valid(self, form):
+        new_client = form.save()
+        new_client.owner = self.request.user
+        new_client.save()
+        return super().form_valid(form)
 
 
 class ClientListView(ListView):
     model = Client
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        if self.request.user.has_perm('mailing.can_view'):
+            return queryset
+        return queryset.filter(owner=self.request.user)
 
 
 class ClientUpdateView(UpdateView):
@@ -42,9 +54,21 @@ class MessageCreateView(CreateView):
 
     success_url = reverse_lazy('mailing:messages_list')
 
+    def form_valid(self, form):
+        new_message = form.save()
+        new_message.owner = self.request.user
+        new_message.save()
+        return super().form_valid(form)
+
 
 class MessageListView(ListView):
     model = Message
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        if self.request.user.has_perm('mailing.can_view'):
+            return queryset
+        return queryset.filter(owner=self.request.user)
 
 
 class MessageUpdateView(UpdateView):
