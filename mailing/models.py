@@ -10,8 +10,7 @@ class Client(models.Model):
     email = models.EmailField(unique=True, verbose_name='email')
     name = models.CharField(max_length=150, verbose_name='ФИО')
     commentary = models.CharField(max_length=250, verbose_name='комментарий', **NULLABLE)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, verbose_name='пользователь',
-                              **NULLABLE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь')
 
 
     def __str__(self):
@@ -25,8 +24,7 @@ class Client(models.Model):
 class Message(models.Model):
     title = models.CharField(max_length=200, verbose_name='Тема')
     text = models.TextField(verbose_name='Сообщение')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь',
-                              **NULLABLE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
         return self.title
