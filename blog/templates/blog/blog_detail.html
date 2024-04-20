@@ -1,0 +1,26 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="bg-body-tertiary p-3 rounded">
+        <div class="row">
+            <div class="col-12">
+                <hr>
+                <h3 class="pb-4 mb-4 fst-italic border-bottom">
+                    <span class="text-muted">{{ object.title }}</span>
+                </h3>
+                <p>{{ object.body }}</p>
+                <div class="col">
+                    <div class="card-footer">
+                        Просмотры {{ object.views_count }}
+                    </div>
+                    <p class="blog-post-meta">Опубликовано: {{ object.date }}
+                </div>
+                <a href="{% url 'blog:list' %}" type="button"
+                   class="btn btn-sm btn-outline-secondary">Назад</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
