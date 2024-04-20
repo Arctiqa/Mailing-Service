@@ -7,7 +7,6 @@ from django.views.generic import ListView, TemplateView, CreateView, UpdateView,
 from blog.models import Blog
 from mailing.forms import ClientForm, MessageForm, MailingForm
 from mailing.models import Client, Message, Mailing, MailingLog
-from mailing.services import get_cache_for_mailings, get_cache_for_active_mailings
 
 
 class IndexListView(TemplateView):
@@ -15,8 +14,8 @@ class IndexListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['mailings_count'] = get_cache_for_mailings()
-        context_data['active_mailings_count'] = get_cache_for_active_mailings()
+        context_data['mailings_count'] = Mailing.objects.all().count()
+        context_data['active_mailings_count'] = Mailing.objects.filter(is_active=True).count()
         blog_list = list(Blog.objects.all())
         random.shuffle(blog_list)
         context_data['blog_list'] = blog_list[:3]
