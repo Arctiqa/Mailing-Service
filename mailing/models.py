@@ -34,7 +34,7 @@ class Client(models.Model):
 class Message(models.Model):
     title = models.CharField(max_length=200, verbose_name='Тема')
     text = models.TextField(verbose_name='Сообщение')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
 
     def __str__(self):
         return self.title
@@ -60,7 +60,8 @@ class Mailing(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='Активная')
 
     def __str__(self):
-        return f'{self.name}, периодичность: {self.periodicity}, статус: {self.status}'
+        return (f'{self.name}, периодичность: {self.periodicity}, статус: {self.status}, start: {self.start_time}'
+                f' end: {self.end_time}, next: {self.next_time}')
 
     class Meta:
         verbose_name = 'рассылка'
