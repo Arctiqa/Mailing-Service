@@ -1,0 +1,24 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="container">
+    <div class="bg-body-tertiary p-3 rounded">
+        {% for object in object_list %}
+        <div class="container">
+            <div class="col-6">
+                Рассылка: {{ object.mailing.name }}
+                <br>
+                Статус: {{ object.status }}
+                <br>
+                Ответ сервера: {{ object.server_response }}
+                <br>
+                Дата отправки: {{ object.last_success }}
+            </div>
+            <hr>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+{% endblock %}

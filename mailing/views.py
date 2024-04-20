@@ -3,7 +3,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
 
 from mailing.forms import ClientForm, MessageForm, MailingForm
-from mailing.models import Client, Message, Mailing
+from mailing.models import Client, Message, Mailing, MailingLog
 
 
 class IndexListView(TemplateView):
@@ -139,3 +139,9 @@ class MailingDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('mailing:mailing_list')
+
+
+class MailingLogsListView(ListView):
+    model = MailingLog
+    template_name = 'mailing/logs_list.html'
+

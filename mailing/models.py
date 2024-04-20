@@ -1,5 +1,5 @@
-from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 from users.models import User
 
@@ -48,6 +48,7 @@ class Mailing(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
     start_time = models.DateTimeField(verbose_name='Дата начала рассылки')
     end_time = models.DateTimeField(verbose_name='Дата окончания рассылки')
+    next_time = models.DateTimeField(default=timezone.now, verbose_name="следующая рассылка")
 
     periodicity = models.CharField(default='once', max_length=10, choices=PERIODICITY, verbose_name='Периодичность')
     status = models.CharField(default='created', max_length=10, choices=STATUS_CHOICES, verbose_name='Статус рассылки')
@@ -70,25 +71,15 @@ class Mailing(models.Model):
         ]
 
 
-class MailingAttempt(models.Model):
-    last_success = models.DateTimeField(verbose_name='Дата последнего успешно отправленного сообщения')
-    status = models.BooleanField(default=False, verbose_name='Статус отправки')
-    server_response = models.TextField(verbose_name='Отклик почтового сервера')
+class MailingLog(models.Model):
+    last_success = models.DateTimeField(verbose_name='Дата последнего отправления', **NULLABLE)
+    status = models.CharField(default=False, max_length=15, verbose_name='Статус отправки', **NULLABLE)
+    server_response = models.CharField(max_length=150, verbose_name='Отклик почтового сервера', **NULLABLE)
+    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='рассылка', **NULLABLE)
+
+    def __str__(self):
+        return f'{self.last_success} - {self.status}'
 
     class Meta:
         verbose_name = 'Статус отправки сообщения'
         verbose_name_plural = 'Статус отправки сообщений'
-
-
-
-# class Logs(models.Model):
-#     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='Рассылка', **NULLABLE)
-#     last_mailing_time = models.DateTimeField(auto_now=True, verbose_name='Время рассылки', **NULLABLE)
-#     status = models.CharField(default=False, max_length=10, choices=LOG_CHOICES, verbose_name='Попытка', **NULLABLE)
-#
-#     def __str__(self):
-#         return f'{self.last_mailing_time} - {self.status}'
-#
-#     class Meta:
-#         verbose_name = 'Лог сообщения'
-#         verbose_name_plural = 'Логов сообщений'

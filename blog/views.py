@@ -86,5 +86,3 @@ def toggle_activity(request, pk):
     blog_item.save()
 
     return redirect(reverse('blog:list'))
-
-

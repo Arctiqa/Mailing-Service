@@ -14,7 +14,7 @@ class MixinFormStyle:
 class ClientForm(MixinFormStyle, forms.ModelForm):
     class Meta:
         model = Client
-        fields = ['name', 'email', 'commentary']
+        fields = ('name', 'email', 'commentary')
 
 
 class MessageForm(MixinFormStyle, forms.ModelForm):
@@ -26,9 +26,4 @@ class MessageForm(MixinFormStyle, forms.ModelForm):
 class MailingForm(MixinFormStyle, forms.ModelForm):
     class Meta:
         model = Mailing
-        exclude = ('owner', 'status',)
-
-        # widgets = {
-        #     'start_date': AdminSplitDateTime(attrs={'placeholder': 'DD.MM.YYYY', 'type': 'date'}),
-        #     'end_date': AdminSplitDateTime(attrs={'placeholder': 'DD.MM.YYYY', 'type': 'date'}),
-        # }
+        exclude = ('next_time', 'owner', 'status',)
