@@ -1,14 +1,27 @@
+import random
+
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
-from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
 
+from blog.models import Blog
 from mailing.forms import ClientForm, MessageForm, MailingForm
 from mailing.models import Client, Message, Mailing, MailingLog
+from mailing.services import get_cache_for_mailings, get_cache_for_active_mailings
 
 
 class IndexListView(TemplateView):
     template_name = 'mailing/index.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['mailings_count'] = get_cache_for_mailings()
+        context_data['active_mailings_count'] = get_cache_for_active_mailings()
+        blog_list = list(Blog.objects.all())
+        random.shuffle(blog_list)
+        context_data['blog_list'] = blog_list[:3]
+        context_data['clients_count'] = len(Client.objects.all())
+        return context_data
 
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
@@ -146,4 +159,3 @@ class MailingLogsListView(LoginRequiredMixin, PermissionRequiredMixin, ListView)
     model = MailingLog
     permission_required = 'mailing.view_mailinglog'
     template_name = 'mailing/logs_list.html'
-

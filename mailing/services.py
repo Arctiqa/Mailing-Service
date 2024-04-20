@@ -7,6 +7,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from mailing.models import Mailing, MailingLog
+from config.settings import CACHE_ENABLED
 
 
 def my_job():
@@ -59,24 +60,27 @@ def my_job():
 
 
 def get_cache_for_mailings():
-    if settings.CACHE_ENABLED:
-        key = 'mailings_count'
-        mailings_count = cache.get(key)
-        if mailings_count is None:
-            mailings_count = Mailing.objects.all().count()
-            cache.set(key, mailings_count)
-    else:
-        mailings_count = Mailing.objects.all().count()
+    if not CACHE_ENABLED:
+        return Mailing.objects.all().count()
+    key = 'mailings_count'
+    mailings_count = cache.get(key)
+    if mailings_count is not None:
+        return mailings_count
+
+    mailings_count = Mailing.objects.all().count()
+    cache.set(key, mailings_count)
+
     return mailings_count
 
 
 def get_cache_for_active_mailings():
-    if settings.CACHE_ENABLED:
-        key = 'active_mailings_count'
-        active_mailings_count = cache.get(key)
-        if active_mailings_count is None:
-            active_mailings_count = Mailing.objects.filter(is_active=True).count()
-            cache.set(key, active_mailings_count)
-    else:
-        active_mailings_count = Mailing.objects.filter(is_active=True).count()
+    if not CACHE_ENABLED:
+        Mailing.objects.filter(is_active=True).count()
+    key = 'active_mailings_count'
+    active_mailings_count = cache.get(key)
+    if active_mailings_count is not None:
+        return active_mailings_count
+    active_mailings_count = Mailing.objects.filter(is_active=True).count()
+    cache.set(key, active_mailings_count)
+
     return active_mailings_count
