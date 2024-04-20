@@ -8,4 +8,3 @@ class BlogForm(MixinFormStyle, forms.ModelForm):
     class Meta:
         model = Blog
         fields = ('title', 'body')
-
