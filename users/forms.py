@@ -39,3 +39,15 @@ class ResetPasswordForm(MixinFormStyle, PasswordResetForm):
     def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email,
                   html_email_template_name=None):
         pass
+
+
+class ModeratorForm(UserChangeForm):
+
+    class Meta:
+        model = User
+        fields = ('is_active',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['password'].widget = forms.HiddenInput()

@@ -67,7 +67,7 @@ class Mailing(models.Model):
         verbose_name_plural = 'рассылки'
 
         permissions = [
-            ('can_view', 'Может смотреть рассылки')
+            ('can_set_is_active', 'Может отключать рассылки')
         ]
 
 

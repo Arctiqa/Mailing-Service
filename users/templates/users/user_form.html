@@ -3,31 +3,31 @@
 {% block content %}
 
 <div class="container">
-<div class="row">
-    <div class="col-12">
+    <div class="row">
+        <div class="col-12">
 
-        <form method="post" action="" class="form-floating" enctype="multipart/form-data">
-            <div class="row">
-                <div class="col-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                Настройки профиля
-                            </h3>
-                        </div>
-                        <div class="card-body">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <button type="submit" class="btn btn-lg btn-block btn-outline-primary">
-                                Сохранить
-                            </button>
+            <form method="post" action="" class="form-floating" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    Настройки профиля
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-outline-primary">
+                                    Сохранить
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 </div>
 
 {% endblock %}

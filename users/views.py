@@ -2,14 +2,14 @@ import secrets
 import string
 
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.contrib.auth.views import PasswordResetView
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView, TemplateView
+from django.views.generic import CreateView, UpdateView, TemplateView, ListView
 
-from users.forms import UserRegisterForm, UserProfileForm, ResetPasswordForm
+from users.forms import UserRegisterForm, UserProfileForm, ResetPasswordForm, ModeratorForm
 from users.models import User
 from config import settings
 
@@ -52,7 +52,6 @@ def verify(request, token):
 
 
 class ResetPasswordView(PasswordResetView):
-
     form_class = ResetPasswordForm
     template_name = 'users/reset_password.html'
     email_template_name = 'users/login.html'
@@ -85,3 +84,22 @@ class NewPassGenerateView(TemplateView):
 
 class NewEmailVerify(TemplateView):
     template_name = 'users/new_email_verify.html'
+
+
+class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = User
+    form_class = ModeratorForm
+    permission_required = 'users.set_is_active'
+
+    def get_success_url(self):
+        return reverse('users:users_list')
+
+
+class UserListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = User
+
+    def test_func(self):
+        _user = self.request.user
+        if _user.has_perms(['users.set_is_active', ]):
+            return True
+        return self.handle_no_permission()

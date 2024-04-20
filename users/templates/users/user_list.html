@@ -1,0 +1,24 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
+<div class="header mx-auto text-center">
+    <h5 class="display-4">Пользователи</h5>
+</div>
+{% for object in object_list %}
+<div class="container">
+    <div class="bg-body-tertiary p-3 rounded">
+        <h6>Пользователь: {{ object.email }}</h6>
+        {% if not object.is_active %}
+        <p style="color: red;">Заблокирован</p>
+        {% else %}
+        <p style="color: green;">Активный</p>
+        {% endif %}
+        {% if perms.mailing.can_set_is_active %}
+        <a class="btn btn-outline-primary" href="{% url 'users:user_edit' object.pk %}">Редактировать</a>
+        {% endif %}
+    </div>
+    <hr>
+</div>
+{% endfor %}
+
+{% endblock %}

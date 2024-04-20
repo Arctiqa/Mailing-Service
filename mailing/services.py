@@ -4,6 +4,8 @@ import pytz
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
+
 from mailing.models import Mailing, MailingLog
 
 
@@ -36,7 +38,7 @@ def my_job():
             status = 'error'
             server_response = str(e)
 
-        log = MailingLog(mailing=mail, status=status, server_response=server_response, last_success=datetime.now())
+        log = MailingLog(mailing=mail, status=status, server_response=server_response, last_success=timezone.now())
         log.save()
 
         if mail.periodicity == 'once':
@@ -49,9 +51,10 @@ def my_job():
             mail.next_time = log.last_success + month
 
         if mail.next_time < mail.end_time:
-            mail.status = 'created'
+            mail.status = 'active'
         else:
             mail.status = 'finished'
+            mail.is_active = False
         mail.save()
 
 

@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
@@ -10,7 +11,7 @@ class IndexListView(TemplateView):
     template_name = 'mailing/index.html'
 
 
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
 
@@ -23,7 +24,7 @@ class ClientCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
 
     def get_queryset(self, *args, **kwargs):
@@ -33,7 +34,7 @@ class ClientListView(ListView):
         return queryset.filter(owner=self.request.user)
 
 
-class ClientUpdateView(UpdateView):
+class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
     form_class = ClientForm
 
@@ -41,14 +42,14 @@ class ClientUpdateView(UpdateView):
         return reverse('mailing:clients_list')
 
 
-class ClientDeleteView(DeleteView):
+class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
 
     def get_success_url(self):
         return reverse('mailing:clients_list')
 
 
-class MessageCreateView(CreateView):
+class MessageCreateView(LoginRequiredMixin, CreateView):
     model = Message
     form_class = MessageForm
 
@@ -61,7 +62,7 @@ class MessageCreateView(CreateView):
         return super().form_valid(form)
 
 
-class MessageListView(ListView):
+class MessageListView(LoginRequiredMixin, ListView):
     model = Message
 
     def get_queryset(self, *args, **kwargs):
@@ -71,7 +72,7 @@ class MessageListView(ListView):
         return queryset.filter(owner=self.request.user)
 
 
-class MessageUpdateView(UpdateView):
+class MessageUpdateView(LoginRequiredMixin, UpdateView):
     model = Message
     form_class = MessageForm
 
@@ -79,14 +80,14 @@ class MessageUpdateView(UpdateView):
         return reverse('mailing:messages_list')
 
 
-class MessageDeleteView(DeleteView):
+class MessageDeleteView(LoginRequiredMixin, DeleteView):
     model = Message
 
     def get_success_url(self):
         return reverse('mailing:messages_list')
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
 
     def get_queryset(self, *args, **kwargs):
@@ -96,7 +97,7 @@ class MailingListView(ListView):
         return queryset.filter(owner=self.request.user)
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
     form_class = MailingForm
 
@@ -110,7 +111,7 @@ class MailingCreateView(CreateView):
         return reverse('mailing:mailing_list')
 
 
-class MailingDetailView(DetailView):
+class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
 
     def get_context_data(self, **kwargs):
@@ -126,7 +127,7 @@ class MailingDetailView(DetailView):
         return context_data
 
 
-class MailingUpdateView(UpdateView):
+class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
 
@@ -134,14 +135,15 @@ class MailingUpdateView(UpdateView):
         return reverse('mailing:mailing_list')
 
 
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
 
     def get_success_url(self):
         return reverse('mailing:mailing_list')
 
 
-class MailingLogsListView(ListView):
+class MailingLogsListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = MailingLog
+    permission_required = 'mailing.view_mailinglog'
     template_name = 'mailing/logs_list.html'
 

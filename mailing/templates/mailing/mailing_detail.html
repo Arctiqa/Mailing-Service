@@ -54,37 +54,11 @@
                                 <td>{{ object.owner }}</td>
                             </tr>
                         </table>
-
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                            {% if perms.mailing.set_is_activated %}
-                            <a href="{% url 'mailing:mailing_edit' object.pk %}" type="button"
-                               class="btn btn-sm btn-outline-primary">Редактировать</a>
-                            {% else %}
-
-                            <a href="{% url 'mailing:mailing_edit' object.pk %}" type="button"
-                               class="btn btn-sm btn-outline-primary">Редактировать</a>
-                            <a href="{% url 'mailing:mailing_delete' object.pk %}" type="button"
-                               class="btn btn-sm btn-outline-danger">Удалить</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="card">
-
-                    <div class="card-body">
-                        {% for log in logs %}
-                        <p>{{ log }}</p>
-                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 {% endblock %}
