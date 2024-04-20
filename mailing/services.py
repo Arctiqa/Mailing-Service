@@ -6,19 +6,21 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
 
-from mailing.models import Mailing, MailingLog
 from config.settings import CACHE_ENABLED
+from mailing.models import Mailing, MailingLog
 
 
 def my_job():
-    day = timedelta(days=1, hours=0, minutes=0)
-    week = timedelta(days=7, hours=0, minutes=0)
-    month = timedelta(days=30, hours=0, minutes=0)
+    day = timedelta(days=0, minutes=4)
+    week = timedelta(days=7)
+    month = timedelta(days=30)
 
-    mailings = Mailing.objects.all().filter(status='created') \
+    mailings = Mailing.objects.all().filter(status__in=['created', 'active']) \
         .filter(is_active=True) \
         .filter(next_time__lte=datetime.now(pytz.timezone('Asia/Irkutsk'))) \
         .filter(end_time__gte=datetime.now(pytz.timezone('Asia/Irkutsk')))
+
+    print(mailings)
 
     for mail in mailings:
         mail.status = 'active'
@@ -39,48 +41,38 @@ def my_job():
             status = 'error'
             server_response = str(e)
 
-        log = MailingLog(mailing=mail, status=status, server_response=server_response, last_success=timezone.now())
+        log = MailingLog(mailing=mail, status=status, server_response=server_response, last_success=mail.next_time)
         log.save()
 
         if mail.periodicity == 'once':
-            mail.next_time = mail.end_time
+            mail.next_time = mail.start_time
         elif mail.periodicity == 'daily':
-            mail.next_time = log.last_success + day
+            mail.next_time = mail.next_time + day
         elif mail.periodicity == 'weekly':
-            mail.next_time = log.last_success + week
+            mail.next_time = mail.next_time + week
         elif mail.periodicity == 'monthly':
-            mail.next_time = log.last_success + month
+            mail.next_time = mail.next_time + month
 
         if mail.next_time < mail.end_time:
             mail.status = 'active'
         else:
             mail.status = 'finished'
             mail.is_active = False
+
+        print('mail:', mail)
         mail.save()
 
 
-def get_cache_for_mailings():
+def get_mailing_logs_from_cache():
     if not CACHE_ENABLED:
-        return Mailing.objects.all().count()
+        return MailingLog.objects.all()
     key = 'mailings_count'
-    mailings_count = cache.get(key)
-    if mailings_count is not None:
-        return mailings_count
+    mailing_logs = cache.get(key)
+    if mailing_logs is not None:
+        return mailing_logs
 
-    mailings_count = Mailing.objects.all().count()
+    mailings_count = MailingLog.objects.all()
     cache.set(key, mailings_count)
 
     return mailings_count
 
-
-def get_cache_for_active_mailings():
-    if not CACHE_ENABLED:
-        Mailing.objects.filter(is_active=True).count()
-    key = 'active_mailings_count'
-    active_mailings_count = cache.get(key)
-    if active_mailings_count is not None:
-        return active_mailings_count
-    active_mailings_count = Mailing.objects.filter(is_active=True).count()
-    cache.set(key, active_mailings_count)
-
-    return active_mailings_count
