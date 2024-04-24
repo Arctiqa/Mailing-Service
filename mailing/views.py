@@ -18,7 +18,7 @@ class IndexListView(TemplateView):
         context_data['active_mailings_count'] = Mailing.objects.filter(is_active=True).count()
         blog_list = list(Blog.objects.all())
         random.shuffle(blog_list)
-        context_data['blog_list'] = blog_list[:3]
+        context_data['blog_list'] = Blog.objects.filter(is_published=True)[:3]
         context_data['clients_count'] = len(Client.objects.all())
         return context_data
 
