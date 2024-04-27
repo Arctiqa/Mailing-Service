@@ -46,7 +46,7 @@ class ClientListView(LoginRequiredMixin, ListView):
         return queryset.filter(owner=self.request.user)
 
 
-class ClientUpdateView(LoginRequiredMixin, UpdateView):
+class ClientUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Client
     form_class = ClientForm
 
@@ -54,7 +54,7 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('mailing:clients_list')
 
 
-class ClientDeleteView(LoginRequiredMixin, DeleteView):
+class ClientDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Client
 
     def get_success_url(self):
@@ -84,7 +84,7 @@ class MessageListView(LoginRequiredMixin, ListView):
         return queryset.filter(owner=self.request.user)
 
 
-class MessageUpdateView(LoginRequiredMixin, UpdateView):
+class MessageUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Message
     form_class = MessageForm
 
@@ -92,7 +92,7 @@ class MessageUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('mailing:messages_list')
 
 
-class MessageDeleteView(LoginRequiredMixin, DeleteView):
+class MessageDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Message
 
     def get_success_url(self):
@@ -139,7 +139,7 @@ class MailingDetailView(LoginRequiredMixin, DetailView):
         return context_data
 
 
-class MailingUpdateView(LoginRequiredMixin, UpdateView):
+class MailingUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
 
@@ -147,7 +147,7 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('mailing:mailing_list')
 
 
-class MailingDeleteView(LoginRequiredMixin, DeleteView):
+class MailingDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Mailing
 
     def get_success_url(self):
