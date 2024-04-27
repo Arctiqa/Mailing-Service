@@ -21,7 +21,7 @@ class Client(models.Model):
     email = models.EmailField(unique=True, verbose_name='email')
     name = models.CharField(max_length=150, verbose_name='ФИО')
     commentary = models.CharField(max_length=250, verbose_name='комментарий', **NULLABLE)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
 
     def __str__(self):
         return f'ФИО: {self.name}, email: {self.email}'
